@@ -10,7 +10,8 @@ export const Route = createFileRoute('/')({
 })
 
 function Home() {
-  const { data: services } = useSuspenseQuery(convexQuery(api.services.list, {}))
+  const queryResult = useSuspenseQuery(convexQuery(api.services.list, {}))
+  const services = queryResult?.data || []
   const createLead = useMutation(api.leads.create)
   
   const [formData, setFormData] = useState({

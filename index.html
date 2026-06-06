@@ -4,8 +4,18 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Idraulica Franceschina - Pronto Intervento Milano 24/7</title>
+    <!-- Script per catturare errori prima dell'avvio di React -->
+    <script>
+      window.onerror = function(msg, url, line, col, error) {
+        var div = document.createElement('div');
+        div.style.cssText = 'position:fixed;top:0;left:0;width:100%;bg:red;color:white;padding:20px;z-index:9999;font-family:sans-serif;';
+        div.innerHTML = '<h3>Errore di caricamento:</h3>' + msg + '<br>Line: ' + line;
+        document.body.appendChild(div);
+        return false;
+      };
+    </script>
   </head>
-  <body>
+  <body style="margin:0;padding:0;">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

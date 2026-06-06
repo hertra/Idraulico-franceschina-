@@ -1,36 +1,43 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { RouterProvider } from '@tanstack/react-router'
-import { getRouter } from './router'
+import { RouterProvider, createRouter } from '@tanstack/react-router'
+import { ConvexQueryClient } from '@convex-dev/react-query'
+import { ConvexProvider } from 'convex/react'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { routeTree } from './routeTree.gen'
 import './styles/app.css'
 
-// Crea il router
-const router = getRouter()
+// 1. Configurazione Convex
+const CONVEX_URL = import.meta.env.VITE_CONVEX_URL || 'https://proper-porpoise-326.convex.cloud'
+const convexQueryClient = new ConvexQueryClient(CONVEX_URL)
 
-// Elemento root nel DOM
-const rootElement = document.getElementById('root')
+// 2. Configurazione React Query
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      queryKeyHashFn: convexQueryClient.hashFn(),
+      queryFn: convexQueryClient.queryFn(),
+    },
+  },
+})
+convexQueryClient.connect(queryClient)
 
-if (!rootElement) {
-  throw new Error('Elemento root non trovato nel DOM')
-}
+// 3. Configurazione Router
+const router = createRouter({
+  routeTree,
+  context: { queryClient },
+})
 
-// Rendering dell'app
-try {
-  const root = ReactDOM.createRoot(rootElement)
-  root.render(
-    <React.StrictMode>
-      <RouterProvider router={router} />
-    </React.StrictMode>
-  )
-  console.log('App montata con successo')
-} catch (error) {
-  console.error('Errore durante il mounting:', error)
-  rootElement.innerHTML = `
-    <div style="padding: 20px; color: #721c24; background-color: #f8d7da; border: 1px solid #f5c6cb; border-radius: 4px; margin: 20px; font-family: sans-serif;">
-      <h2 style="margin-top: 0;">Si è verificato un errore critico</h2>
-      <p>L'applicazione non è riuscita ad avviarsi correttamente.</p>
-      <pre style="white-space: pre-wrap; font-size: 12px;">${error instanceof Error ? error.message : String(error)}</pre>
-      <button onclick="window.location.reload()" style="padding: 8px 16px; background: #721c24; color: white; border: none; border-radius: 4px; cursor: pointer;">Ricarica pagina</button>
-    </div>
-  `
-}
+// 4. Avvio dell'App
+const rootElement = document.getElementById('root')!
+const root = ReactDOM.createRoot(rootElement)
+
+root.render(
+  <React.StrictMode>
+    <ConvexProvider client={convexQueryClient.convexClient}>
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
+    </ConvexProvider>
+  </React.StrictMode>
+)
