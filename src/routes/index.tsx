@@ -10,8 +10,10 @@ export const Route = createFileRoute('/')({
 })
 
 function Home() {
-  const queryResult = useSuspenseQuery(convexQuery(api.services.list, {}))
-  const services = queryResult?.data || []
+  const services = [
+    { slug: 'pronto-intervento', title: 'Pronto Intervento', description: 'H24', iconName: 'wrench' },
+    { slug: 'impianti', title: 'Impianti', description: 'Certificati', iconName: 'pipe' }
+  ]
   const createLead = useMutation(api.leads.create)
   
   const [formData, setFormData] = useState({
