@@ -9,58 +9,55 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as BackupRouteImport } from './routes/backup'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as ServiziServiceSlugRouteImport } from './routes/servizi.$serviceSlug'
-import { Route as ServiziRouteImport } from './routes/servizi.'
 
+const BackupRoute = BackupRouteImport.update({
+  id: '/backup',
+  path: '/backup',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ServiziServiceSlugRoute = ServiziServiceSlugRouteImport.update({
-  id: '/servizi/$serviceSlug',
-  path: '/servizi/$serviceSlug',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ServiziRoute = ServiziRouteImport.update({
-  id: '/servizi/',
-  path: '/servizi/',
-  getParentRoute: () => rootRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/servizi/': typeof ServiziRoute
-  '/servizi/$serviceSlug': typeof ServiziServiceSlugRoute
+  '/backup': typeof BackupRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/servizi': typeof ServiziRoute
-  '/servizi/$serviceSlug': typeof ServiziServiceSlugRoute
+  '/backup': typeof BackupRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/servizi/': typeof ServiziRoute
-  '/servizi/$serviceSlug': typeof ServiziServiceSlugRoute
+  '/backup': typeof BackupRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/servizi/' | '/servizi/$serviceSlug'
+  fullPaths: '/' | '/backup'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/servizi' | '/servizi/$serviceSlug'
-  id: '__root__' | '/' | '/servizi/' | '/servizi/$serviceSlug'
+  to: '/' | '/backup'
+  id: '__root__' | '/' | '/backup'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  ServiziRoute: typeof ServiziRoute
-  ServiziServiceSlugRoute: typeof ServiziServiceSlugRoute
+  BackupRoute: typeof BackupRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/backup': {
+      id: '/backup'
+      path: '/backup'
+      fullPath: '/backup'
+      preLoaderRoute: typeof BackupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -68,27 +65,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/servizi/$serviceSlug': {
-      id: '/servizi/$serviceSlug'
-      path: '/servizi/$serviceSlug'
-      fullPath: '/servizi/$serviceSlug'
-      preLoaderRoute: typeof ServiziServiceSlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/servizi/': {
-      id: '/servizi/'
-      path: '/servizi'
-      fullPath: '/servizi/'
-      preLoaderRoute: typeof ServiziRouteImport
-      parentRoute: typeof rootRouteImport
-    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  ServiziRoute: ServiziRoute,
-  ServiziServiceSlugRoute: ServiziServiceSlugRoute,
+  BackupRoute: BackupRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
