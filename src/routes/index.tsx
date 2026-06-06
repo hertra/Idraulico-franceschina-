@@ -52,6 +52,7 @@ function Home() {
           </div>
           <nav className="hidden md:flex items-center gap-8 text-sm font-semibold">
             <a href="#servizi" className="hover:text-blue-600 transition-colors">Servizi</a>
+            <a href="#dove-siamo" className="hover:text-blue-600 transition-colors">Dove Siamo</a>
             <a href="#contatti" className="px-5 py-2.5 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-all shadow-lg shadow-blue-200">
               Richiedi Preventivo
             </a>
@@ -133,7 +134,7 @@ function Home() {
       </section>
 
       {/* Map Section */}
-      <section className="bg-white border-t border-gray-100 overflow-hidden">
+      <section id="dove-siamo" className="bg-white border-t border-gray-100 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
           <h2 className="text-3xl font-extrabold text-gray-900 mb-4">Dove Trovarci</h2>
           <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
