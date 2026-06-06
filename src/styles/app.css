@@ -1,0 +1,81 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-primary: #1a3a5c;
+  --color-primary-light: #2a5a8c;
+  --color-primary-dark: #0f2440;
+  --color-accent: #d4a855;
+  --color-accent-light: #e4c878;
+  --color-accent-dark: #b88930;
+  --color-warm: #faf6f0;
+  --color-emergency: #dc2626;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply text-gray-800 bg-gray-50;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+
+  .using-mouse * {
+    outline: none !important;
+  }
+}
+
+@layer components {
+  .gradient-hero {
+    background: linear-gradient(135deg, #0f2440 0%, #1a3a5c 50%, #2a5a8c 100%);
+  }
+
+  .gradient-cta {
+    background: linear-gradient(135deg, #d4a855 0%, #e4c878 50%, #d4a855 100%);
+  }
+
+  .card-hover {
+    transition: all 0.3s ease;
+  }
+
+  .card-hover:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px -8px rgba(26, 58, 92, 0.15);
+  }
+
+  .service-icon {
+    @apply w-14 h-14 rounded-full flex items-center justify-center text-white text-2xl;
+    background: linear-gradient(135deg, #1a3a5c, #2a5a8c);
+  }
+
+  .phone-pulse {
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+
+  .blob {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.15;
+    pointer-events: none;
+  }
+
+  .whatsapp-float {
+    @apply fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full flex items-center justify-center shadow-lg;
+    background: #25D366;
+    transition: all 0.3s ease;
+  }
+
+  .whatsapp-float:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 24px rgba(37, 211, 102, 0.4);
+  }
+}
