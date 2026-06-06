@@ -1,8 +1,0 @@
-{
-  "version": 2,
-  "framework": "nitro",
-  "build": {
-    "command": "npm run build"
-  },
-  "outputDirectory": ".output"
-}

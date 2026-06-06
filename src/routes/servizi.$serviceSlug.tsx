@@ -3,7 +3,7 @@ import { useSuspenseQuery } from '@tanstack/react-query'
 import { convexQuery } from '@convex-dev/react-query'
 import { api } from '../../convex/_generated/api'
 
-export const Route = createFileRoute('/servizi/')({
+export const Route = createFileRoute('/servizi/$serviceSlug')({
   component: ServicePage,
 })
 
