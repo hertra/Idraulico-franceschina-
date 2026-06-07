@@ -37,7 +37,7 @@ function ServicePage() {
           </Link>
           <div className="hidden sm:flex flex-col text-right">
             <span className="text-lg font-bold text-blue-900 leading-tight">Idraulica Franceschina</span>
-            <span className="text-xs text-gray-500 font-medium uppercase tracking-widest">Carlo Antonio • Milano</span>
+            <span className="text-xs text-gray-500 font-medium uppercase tracking-widest">Artigiano Antonio • Milano</span>
           </div>
         </div>
       </header>

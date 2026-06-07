@@ -1,6 +1,8 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
-import { useState } from 'react'
+import { useState, FormEvent } from 'react'
 import { useMutation } from 'convex/react'
+import { useSuspenseQuery } from '@tanstack/react-query'
+import { convexQuery } from '@convex-dev/react-query'
 import { api } from '../../convex/_generated/api'
 
 export const Route = createFileRoute('/')({
@@ -8,10 +10,7 @@ export const Route = createFileRoute('/')({
 })
 
 function Home() {
-  const services = [
-    { slug: 'pronto-intervento', title: 'Pronto Intervento', description: 'H24', iconName: 'wrench' },
-    { slug: 'impianti', title: 'Impianti', description: 'Certificati', iconName: 'pipe' }
-  ]
+  const { data: services } = useSuspenseQuery(convexQuery(api.services.list, {}))
   const createLead = useMutation(api.leads.create)
   
   const [formData, setFormData] = useState({
@@ -21,13 +20,26 @@ function Home() {
   })
   const [isSubmitted, setIsSubmitted] = useState(false)
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
     try {
       await createLead(formData)
+      
+      // WhatsApp Integration
+      const whatsappNumber = "393394464235"
+      const text = `Ciao! Richiesta preventivo dal sito:\n\n👤 Nome: ${formData.name}\n📞 Tel: ${formData.phone}\n📝 Messaggio: ${formData.message}`
+      const encodedText = encodeURIComponent(text)
+      const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedText}`
+      
       setIsSubmitted(true)
-      setFormData({ name: '', phone: '', message: '' })
-      setTimeout(() => setIsSubmitted(false), 5000)
+      
+      // Open WhatsApp after a short delay
+      setTimeout(() => {
+        window.open(whatsappUrl, '_blank')
+        setFormData({ name: '', phone: '', message: '' })
+        setTimeout(() => setIsSubmitted(false), 5000)
+      }, 1000)
+      
     } catch (err) {
       alert("Errore nell'invio. Per favore chiamaci direttamente.")
     }
@@ -56,11 +68,11 @@ function Home() {
             <span className="text-[10px] text-gray-500 font-bold tracking-[0.2em] uppercase">Artigiano Antonio • Milano</span>
           </div>
           <nav className="hidden md:flex items-center gap-8 text-sm font-bold uppercase tracking-tight">
-            <a href="#servizi" className="hover:text-blue-600 transition-colors">Servizi</a>
-            <a href="#dove-siamo" className="hover:text-blue-600 transition-colors">Dove Siamo</a>
-            <a href="#contatti" className="px-6 py-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-all shadow-lg shadow-blue-100">
+            <Link to="/" hash="servizi" className="hover:text-blue-600 transition-colors">Servizi</Link>
+            <Link to="/" hash="dove-siamo" className="hover:text-blue-600 transition-colors">Dove Siamo</Link>
+            <Link to="/" hash="contatti" className="px-6 py-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-all shadow-lg shadow-blue-100">
               Contattaci
-            </a>
+            </Link>
           </nav>
         </div>
       </header>
@@ -113,7 +125,15 @@ function Home() {
                 params={{ serviceSlug: service.slug }}
                 className="p-10 rounded-[2.5rem] border border-gray-100 hover:border-blue-100 hover:shadow-2xl hover:shadow-blue-50 transition-all group bg-white text-left block relative overflow-hidden"
               >
-                <div className="text-4xl mb-6">🔧</div>
+                <div className="text-4xl mb-6">
+                  {service.iconName === 'Clock' && '⚡'}
+                  {service.iconName === 'Droplets' && '💧'}
+                  {service.iconName === 'Thermometer' && '🔥'}
+                  {service.iconName === 'Bath' && '🛁'}
+                  {service.iconName === 'Wrench' && '🛠️'}
+                  {service.iconName === 'Home' && '🏠'}
+                  {!['Clock', 'Droplets', 'Thermometer', 'Bath', 'Wrench', 'Home'].includes(service.iconName) && '🔧'}
+                </div>
                 <h3 className="text-2xl font-black text-gray-900 mb-4 tracking-tight">{service.title}</h3>
                 <p className="text-gray-500 font-medium leading-relaxed mb-8">{service.description}</p>
                 <div className="flex items-center gap-2 text-blue-600 font-black text-sm uppercase tracking-widest">
@@ -156,7 +176,7 @@ function Home() {
                 <div className="text-center py-10">
                   <div className="text-5xl mb-6">✅</div>
                   <p className="text-2xl font-black text-gray-900">Richiesta Inviata!</p>
-                  <p className="text-gray-500 font-medium mt-2">Ti contatteremo sul numero indicato.</p>
+                  <p className="text-gray-500 font-medium mt-2">Apertura WhatsApp in corso...</p>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-4">
