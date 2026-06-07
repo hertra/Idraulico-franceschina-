@@ -1,5 +1,5 @@
-import { internalMutation } from "./_generated/server";
 import { v } from "convex/values";
+import { internalMutation } from "./_generated/server";
 
 export const seed = internalMutation({
   args: {},
@@ -8,7 +8,7 @@ export const seed = internalMutation({
     // Clear existing services
     const existing = await ctx.db.query("services").collect();
     for (const doc of existing) {
-      await ctx.db.delete(doc._id);
+      await ctx.db.delete("services", doc._id);
     }
 
     const services = [
